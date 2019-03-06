@@ -1,3 +1,9 @@
 import React from 'react';
-import TodoList from './components/TodoComponents/TodoList';
-import TodoForm from './components/TodoComponents/TodoForm';
+
+function Todo(props) {
+    return(
+        <p>{props.listItem.item}</p>
+    );
+}
+
+export default Todo;
