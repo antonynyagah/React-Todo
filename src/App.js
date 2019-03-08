@@ -7,51 +7,66 @@ import TodoForm from './components/TodoComponents/TodoForm';
 class App extends React.Component {
   // you will need a place to store your state in this component.
 
-constructor() {
-  super();
-  this.state = {
-    list: [],
-    inputValue: '',
-  };
-}
+  constructor() {
+    super();
+    this.state = {
+      todoList: [],
+      input: '',
+    }
+  }
 
-addTodo = e => {
-  e.preventDefault();
-  const newTodo = {
-    id: Date.now(),
-    item: this.state.inputValue,
-    completed: false,
-  };
-  console.log(newTodo);
-  this.setState({
-    list: [...this.state.list, newTodo],
-    inputValue: '',
-  });
-};
+  handleChanges = (e) => {
+    this.setState({ input: e.target.value });
+  }
 
-handleChanges = e => {
-  this.setState({
-    inputValue: e.target.value
-  });
-};
 
-resetList = e => {
+  addTodo = (e, item) => {
+    e.preventDefault();
+    const newTodo = {
+      name: item,
+      id: Date.now(),
+      completed: false
+    };
+
     this.setState({
-      list: [],
+      todoList: [...this.state.todoList, newTodo]
+    })
+  }
+
+  toggleItem = todoId => {
+    this.setState({
+      todoList: this.state.todoList.map(todo => {
+        if (todoId === todo.id) {
+          return {
+            ...todo,
+            completed: !todo.completed
+          }
+        };
+        return todo;
+      })
+    })
+  }
+
+  clear = (e) => {
+    e.preventDefault();
+    this.setState({
+      todoList: this.state.todoList.filter(item => !item.completed)
     });
-  };
+  }
+
 
   render() {
     return (
-      <div>
-          <h2>To Do:</h2>
-          <TodoList list={this.state.list}/>
+      <div className="App">
+        <div className="header">
+          <h1>Todo List</h1>
+        </div>
+        <TodoList todoList={this.state.todoList} toggleItem={this.toggleItem} />
+        <TodoForm input={this.state.input} handleChanges={this.handleChanges} addItem={this.addTodo} />
+        <button onClick={this.clear}>Clear</button>
 
-          <TodoForm addTodo={this.addTodo} value={this.state.inputValue} handleChanges={this.handleChanges} />
-          <button onClick={this.resetList}>Clear Completed</button>
       </div>
     );
   }
 }
-
 export default App;
